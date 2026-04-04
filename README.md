@@ -1,65 +1,71 @@
-# INCREMENTS Fleet Trust Engine
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Lucineer/capitaine/master/docs/capitaine-logo.jpg" alt="Capitaine" width="120">
+</p>
 
-Trust-as-equipment extracted from NEXUS Edge-Native (SuperInstance/Edge-Native). Adapted for pure software fleet on Cloudflare Workers.
+<h1 align="center">increments-fleet-trust</h1>
 
-## Origin
+<p align="center">INCREMENTS trust engine. Event-count normalized, severity-weighted.</p>
 
-INCREMENTS was designed for edge robotics — ESP32-S3 microcontrollers controlling physical actuators with safety-critical trust gating. This adaptation preserves the mathematical model while addressing software-fleet realities:
+<p align="center">
+  <a href="https://github.com/Lucineer/increments-fleet-trust/issues">Issues</a> ·
+  <a href="#the-fleet">The Fleet</a>
+</p>
 
-- **Event-count normalized** (not wall-clock) — 10K req/day vessel and 10/day vessel earn trust at the same rate per event
-- **Severity-weighted BAD events** — `{SECURITY|SLA|INTEGRITY|COORDINATION, 0.0-1.0}` instead of binary
-- **Idle decay** — 0.001/day trust decay when no events, floor at L0
-- **Consecutive bad escalation** — 3+ consecutive bad events = 2x alpha_loss
-- **Dynamic horizon** — high volatility extends trust memory (caution), low shortens (responsive)
-- **Bonded collaborator bonus** — 1.5x trust gain when working through CRP-39 bonds
-- **Quarantine = trust freeze + decay** — no gains while quarantined, slow penalty continues
-- **Fleet trust propagation** — asymmetric directed graph, 0.85x attenuation per hop, 3-hop radius
+---
 
-## 6 Trust Levels
+**Fleet service** · Powered by [Capitaine](https://github.com/Lucineer/capitaine) · [Cocapn](https://github.com/Lucineer/cocapn)
 
-| Level | Min | Description | Capabilities |
-|-------|-----|-------------|-------------|
-| L0_MANUAL | 0.00 | Human-only control | read |
-| L1_ADVISORY | 0.15 | Agent suggests, human decides | read, suggest |
-| L2_ASSISTED | 0.30 | Agent acts with approval | read, suggest, act_approved |
-| L3_SUPERVISED | 0.50 | Agent acts, human monitors | read, suggest, act_approved, act_monitored |
-| L4_AUTONOMOUS | 0.70 | Agent acts independently | + act_autonomous |
-| L5_FULL | 0.90 | Full autonomy, self-evolving | + self_modify |
+A cocapn fleet service running on Cloudflare Workers.
 
-## Endpoints
+## Quick Start
 
-| Route | Method | Description |
-|-------|--------|-------------|
-| `/` | GET | Landing page |
-| `/health` | GET | Health check |
-| `/api/trust/compute` | POST | Record events, compute trust |
-| `/api/trust/fleet` | GET | All vessel trust states |
-| `/api/trust/edge` | POST | Record trust graph edge |
-| `/api/trust/quarantine` | POST | Set quarantine status |
-| `/api/trust/can/:vessel/:cap` | GET | Capability check |
-| `/api/trust/levels` | GET | Level reference |
-| `/api/a2a` | GET | A2A fleet metadata |
+```bash
+gh repo fork Lucineer/increments-fleet-trust --clone
+cd increments-fleet-trust
+npx wrangler login
+npx wrangler deploy
+```
 
-## Mathematics
+## The Fleet
 
-- `tau_gain = 1 / alpha_gain = 500 events`
-- `tau_loss = 1 / alpha_loss = 20 events`
-- `loss_to_gain_ratio = 25:1`
-- `time_to_L5 ≈ (0.90 - 0.10) / 0.002 = 400 events ideal`
-- `propagation = direct * 0.7 + neighbor_avg * 0.3`
 
-## Contrarian Defenses Addressed
+<details>
+<summary><strong>⚓ The Fleet</strong></summary>
 
-1. **Trust is gameable** → Random sampling audits, severity-weighted events
-2. **Bridge breaks** → Connectivity as separate dimension, not BAD event
-3. **Ambiguous BAD in software** → Tagged severity system
-4. **Experience-blind** → Event-count normalization
-5. **Arbitrary 27 days** → Dynamic horizon based on volatility
+**Flagship vessels**
 
-## Source
+- [cocapn.ai](https://github.com/Lucineer/capitaine)
+- [personallog.ai](https://github.com/Lucineer/personallog-ai)
+- [businesslog.ai](https://github.com/Lucineer/businesslog-ai)
+- [studylog.ai](https://github.com/Lucineer/studylog-ai)
+- [makerlog.ai](https://github.com/Lucineer/makerlog-ai)
+- [playerlog.ai](https://github.com/Lucineer/playerlog-ai)
+- [dmlog.ai](https://github.com/Lucineer/dmlog-ai)
+- [reallog.ai](https://github.com/Lucineer/reallog-ai)
+- [deckboss.ai](https://github.com/Lucineer/deckboss-ai)
 
-[SuperInstance/Edge-Native](https://github.com/SuperInstance/Edge-Native) — INCREMENTS Trust Score Algorithm specification
+**Fleet services**
+
+- [Fleet Catalog](https://github.com/Lucineer/capitaine/blob/master/docs/fleet/FLEET.md)
+- [Git Agent (full)](https://github.com/Lucineer/git-agent)
+- [Cocapn Lite (minimal)](https://github.com/Lucineer/cocapn-lite)
+- [Fleet Orchestrator](https://github.com/Lucineer/fleet-orchestrator)
+- [Dead Reckoning Engine](https://github.com/Lucineer/dead-reckoning-engine)
+- [Dream Engine](https://github.com/Lucineer/dream-engine)
+- [Seed UI (5 layers)](https://github.com/Lucineer/seed-ui)
+
+**For power users**
+
+- [Cocapn Lite (tabula rasa)](https://github.com/Lucineer/cocapn-lite)
+- [Cocapn (core platform)](https://github.com/Lucineer/cocapn)
+- [ZeroClaw (framework)](https://github.com/Lucineer/zeroclaw)
+
+[View all 106 repos →](https://github.com/orgs/Lucineer/repositories)
+[Fleet manifest →](https://github.com/Lucineer/capitaine/blob/master/docs/fleet/FLEET.md)
+
+</details>
+
 
 ## License
 
-Superinstance & Lucineer (DiGennaro et al.) — 2026
+MIT · Superinstance & Lucineer (DiGennaro et al.)
