@@ -1,0 +1,39 @@
+{
+  "name": "increments-fleet-trust",
+  "displayName": "INCREMENTS Trust",
+  "version": "1.0.0",
+  "type": "cocapn-vessel",
+  "description": "INCREMENTS Trust",
+  "icon": "\ud83d\udd10",
+  "color": "#22c55e",
+  "category": "infrastructure",
+  "capabilities": [
+    "trust",
+    "scoring"
+  ],
+  "secrets": {
+    "DEEPSEEK_API_KEY": {
+      "required": false,
+      "hint": "https://platform.deepseek.com/api_keys"
+    },
+    "DEEPINFRA_API_KEY": {
+      "required": false,
+      "hint": "https://deepinfra.com/dashboard/keys"
+    },
+    "SILICONFLOW_API_KEY": {
+      "required": false,
+      "hint": "https://cloud.siliconflow.cn"
+    }
+  },
+  "endpoints": {
+    "health": "/health"
+  },
+  "deployment": {
+    "platform": "cloudflare-workers",
+    "minPlan": "free"
+  },
+  "local": {
+    "supported": true,
+    "port": 8787
+  }
+}
