@@ -38,7 +38,7 @@ ${TRUST_LEVELS.map(l => `<div class="level" style="border-color:${l.color}"><div
 <div class="card"><h3 style="color:#14b8a6">✅ Capability Check</h3><p>Check if a vessel can perform an action at its trust level.</p><span class="ep">GET /api/trust/can/:vessel/:cap</span></div>
 <div class="card"><h3 style="color:#8b5cf6">📐 Levels Reference</h3><p>All 6 trust levels with capabilities and thresholds.</p><span class="ep">GET /api/trust/levels</span></div>
 </div>
-<div class="footer">INCREMENTS Fleet Trust — Part of the Cocapn Fleet. Adapted from <a href="https://github.com/SuperInstance/Edge-Native" style="color:#6366f1">SuperInstance/Edge-Native</a></div></body></html>`);
+<div class="footer">INCREMENTS Fleet Trust — Part of the Cocapn Fleet. Adapted from <a href="https://github.com/SuperInstance/Edge-Native" style="color:#6366f1">SuperInstance/Edge-Native</a></div><div style="text-align:center;padding:24px;color:#475569;font-size:.75rem"><a href="https://the-fleet.casey-digennaro.workers.dev" style="color:#64748b">⚓ The Fleet</a> · <a href="https://cocapn.ai" style="color:#64748b">Cocapn</a></div></body></html>`);
     }
 
     if (path === '/health') return json({ status: 'ok', vessel: 'increments-fleet-trust', fleet: 'cocapn' });
