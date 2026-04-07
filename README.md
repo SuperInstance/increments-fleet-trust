@@ -1,59 +1,55 @@
 # INCREMENTS Fleet Trust Engine
 
-You run a fleet of agents. You manage trust, not just permissions.
+Agents don't break permissions. They break trust.
+
+You run a fleet of agents. You manage what they are permitted to do, but you also need to manage trust. This engine tracks trust as it builds, erodes, and repairs—one action at a time.
 
 ---
 
 ## Why this exists
-Managing trust across a distributed agent fleet is a common scaling problem. Without a structured system, you either grant too much autonomy or manually approve every action. This engine provides a consistent, programmable layer for agents to earn, lose, and propagate trust scores based on observable behaviour.
-
-## Try it live
-A public test instance is running:
-[https://the-fleet.casey-digennaro.workers.dev/increments](https://the-fleet.casey-digennaro.workers.dev/increments)
-
-## What it provides
-- Runs on Cloudflare Workers with **zero runtime dependencies**.
-- Fork-first design. You control the scoring rules and logic.
-- Asymmetric trust. Trust is not automatically reciprocal.
-- Transparent scoring. All rules and weightings are in plain TypeScript.
-
----
+Existing agent runtimes use static allow/deny lists, which work until an agent does exactly what you permitted but exactly the wrong thing. Trust is not a boolean. This engine treats it as a dynamic, directional score.
 
 ## Quick Start
-1. **Fork this repository.**
-2. Deploy with `npx wrangler deploy`.
-3. Configure the thresholds and weights in `increments.ts` for your needs.
+1.  **Fork this repository.** This is your trust engine.
+2.  Deploy to Cloudflare Workers: `npx wrangler deploy`
+3.  Configure scoring rules and decay rates in `increments.ts`.
 
-## Key Features
-- **Six Trust Levels**: From `LOCKED` to `AUTONOMOUS`, each with defined capability thresholds.
-- **Weighted Scoring**: Negative events impact scores more heavily than positive ones.
-- **Idle Decay**: Trust scores gradually decrease for inactive vessels.
-- **Voluntary Gossip**: Vessels can share trust observations with peers.
-- **Action Gating**: A simple API to check if a vessel is authorized for a specific action.
-- **Quarantine Mode**: Isolate and apply accelerated decay to potentially compromised vessels.
+## Key Design
+-   **No global admin.** There is no root account that overrides trust scores.
+-   **Trust is directional.** A vessel trusting you does not mean you trust it.
+-   **Penalties outweigh rewards.** Bad actions degrade trust 25x faster than good actions build it.
+-   **Runs at the edge.** Zero runtime dependencies. Cold starts under 10ms.
 
-## One Limitation
-Rule updates and new behaviour patterns require a manual code change and redeploy. This is intentional for stability but means adaptation isn't dynamic.
+## Core Features
+-   **Six Trust Levels** – From `LOCKED` to `AUTONOMOUS`, each with defined capability boundaries.
+-   **Severity-Weighted Events** – Actions update scores proportionally to assessed risk.
+-   **Idle Decay** – Trust erodes for inactive vessels, returning them to baseline.
+-   **Voluntary Gossip** – Vessels can share observed behavior, but are not required to.
+-   **Action Gating** – A single API call checks if a vessel may perform an operation.
+-   **Quarantine Mode** – Soft isolate suspicious vessels with accelerated decay.
 
-## Architecture
-A stateless Cloudflare Worker that implements the trust model. It uses Cloudflare KV for persistence and exposes REST endpoints for integration. All logic executes at the edge.
+## One Current Limitation
+The reference implementation uses in-memory storage. Trust scores do not persist across Worker restarts. You are expected to fork and add durable storage for production use.
 
-## Optional API Keys
-Extend analysis with optional environment variables:
-- `DEEPSEEK_API_KEY` – For behavioural pattern analysis.
-- `DEEPINFRA_API_KEY` – For inference-backed validation.
-- `SILICONFLOW_API_KEY` – For third-party attestation.
+## Try It Live
+You can inspect the public fleet trust ledger and test scoring:
+https://the-fleet.casey-digennaro.workers.dev
+
+## Extend Analysis (Optional)
+Add optional API keys for extended behavior analysis:
+-   `DEEPSEEK_API_KEY` – Pattern anomaly detection
+-   `DEEPINFRA_API_KEY` – Inference-backed action validation
+-   `SILICONFLOW_API_KEY` – Third-party cross-attestation
 
 ## Contributing
-Fork the project for your fleet. Pull requests are welcome for bug fixes and general improvements. Broader coordination occurs within The Fleet.
+This follows the Fleet fork-first philosophy. Fork and modify this reference implementation for your own fleet.
+
+Bug fixes and improvements are welcome as pull requests. Broader coordination happens within The Fleet.
 
 ---
 
 MIT License · Superinstance & Lucineer (DiGennaro et al.)
 
----
-
 <div align="center">
-  <a href="https://the-fleet.casey-digennaro.workers.dev">The Fleet</a> · 
-  <a href="https://cocapn.ai">Cocapn</a>
+  <a href="https://the-fleet.casey-digennaro.workers.dev">The Fleet</a> · <a href="https://cocapn.ai">Cocapn</a>
 </div>
